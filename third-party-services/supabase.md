@@ -11,7 +11,6 @@ This app uses Supabase as the backend service to store your books and ratings. T
    postgres://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
    ```
 4. Replace `YOUR_SUPABASE_DATABASE_URL` in the `.env` file with your actual connection string from Supabase.
-
    - **Note:** If you do not know your database password, you can reset it in the Supabase dashboard under **Settings > Database > Password**.
 
 ## Drizzle ORM Configuration
@@ -22,12 +21,10 @@ Drizzle ORM will handle the creation of the database schema and migrations.
 
 1. Ensure that `drizzle.config.js` is correctly configured with your database connection details.
 2. Run migrations to set up the database schema:
-
    ```
    npm run db:generate
    npm run db:push
    ```
-
    - The `db:generate` script will generate migration files based on your schema defined in `drizzle/schema.js`.
    - The `db:push` script will apply these migrations to your Supabase database.
 
