@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { books } from '../drizzle/schema';
 import { json } from 'micro';
-import { desc } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -16,7 +16,7 @@ const db = drizzle(pool);
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const data = await db.select().from(books).orderBy(desc(books.createdAt));
+      const data = await db.select().from(books).orderBy(sql`${books.createdAt} DESC`);
       res.status(200).json(data);
     } catch (error) {
       console.error(error);
