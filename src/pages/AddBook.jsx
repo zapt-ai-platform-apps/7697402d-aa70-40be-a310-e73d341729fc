@@ -5,6 +5,7 @@ import { useNavigate } from '@solidjs/router';
 function AddBook() {
   const [title, setTitle] = createSignal('');
   const [author, setAuthor] = createSignal('');
+  const [score, setScore] = createSignal(5);
   const [loading, setLoading] = createSignal(false);
   const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ function AddBook() {
       {
         title: title(),
         author: author(),
+        score: score(),
       },
     ]);
     setLoading(false);
@@ -50,9 +52,24 @@ function AddBook() {
             required
           />
         </div>
+        <div>
+          <label class="block text-gray-700">Rating</label>
+          <select
+            value={score()}
+            onChange={(e) => setScore(parseInt(e.target.value))}
+            class="w-full mt-1 p-2 border rounded"
+            required
+          >
+            <option value="5">5 - ★★★★★</option>
+            <option value="4">4 - ★★★★☆</option>
+            <option value="3">3 - ★★★☆☆</option>
+            <option value="2">2 - ★★☆☆☆</option>
+            <option value="1">1 - ★☆☆☆☆</option>
+          </select>
+        </div>
         <button
           type="submit"
-          class="px-4 py-2 bg-blue-500 text-white rounded"
+          class="px-4 py-2 bg-green-500 text-white rounded disabled:opacity-50"
           disabled={loading()}
         >
           {loading() ? 'Adding...' : 'Add Book'}

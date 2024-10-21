@@ -1,6 +1,6 @@
 # Supabase Setup
 
-This app uses Supabase as the backend service to store your books.
+This app uses Supabase as the backend service to store your books and ratings.
 
 ## Steps to Set Up Supabase
 
@@ -17,6 +17,7 @@ create table books (
   id bigint generated always as identity primary key,
   title text not null,
   author text not null,
+  score integer not null check (score >= 1 and score <= 5),
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 ```
