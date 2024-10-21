@@ -30,4 +30,4 @@ This app helps you keep track of the books you have read and allows you to rate 
 - **Loading States:** Visual feedback is provided during data fetching and form submission to enhance user experience.
 - **Prevent Double Submissions:** The "Add Book" button is disabled while the form submission is in progress to prevent multiple submissions.
 - **User-Friendly Interface:** Clean and intuitive design for easy navigation and interaction.
-- **Data Persistence:** Uses Supabase as a backend service to store and retrieve books securely.
+- **Data Persistence:** Uses Supabase as a backend service with Drizzle ORM to store and retrieve books securely.

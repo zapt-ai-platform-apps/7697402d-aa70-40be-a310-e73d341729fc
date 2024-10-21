@@ -1,54 +1,49 @@
 # Supabase Setup
 
-This app uses Supabase as the backend service to store your books and ratings.
+This app uses Supabase as the backend service to store your books and ratings. The database schema is defined and managed using Drizzle ORM.
 
 ## Steps to Set Up Supabase
 
 1. Go to [Supabase](https://supabase.io) and create a new project.
-2. Once your project is created, go to the Project Settings and get your API URL and Anon Key.
-3. Replace `YOUR_SUPABASE_URL` and `YOUR_SUPABASE_ANON_KEY` in the `.env` file with your project's credentials.
+2. Once your project is created, navigate to the **Settings** tab in your project dashboard.
+3. Under **Database** settings, find your **Connection string**. It should look something like:
+   ```
+   postgres://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+   ```
+4. Replace `YOUR_SUPABASE_DATABASE_URL` in the `.env` file with your actual connection string from Supabase.
 
-## Setting Up the Database Schema
+   - **Note:** If you do not know your database password, you can reset it in the Supabase dashboard under **Settings > Database > Password**.
 
-Use the following SQL to create the `books` table in your Supabase database:
+## Drizzle ORM Configuration
 
-```sql
-create table books (
-  id bigint generated always as identity primary key,
-  title text not null,
-  author text not null,
-  score integer not null check (score >= 1 and score <= 5),
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-```
+Drizzle ORM will handle the creation of the database schema and migrations.
 
-## Enabling Row Level Security (RLS)
+### Steps:
 
-Ensure that anonymous users can read and write to the `books` table.
+1. Ensure that `drizzle.config.js` is correctly configured with your database connection details.
+2. Run migrations to set up the database schema:
 
-1. Go to the `books` table in the Supabase dashboard.
-2. Enable Row Level Security (RLS).
-3. Add the following policies:
+   ```
+   npm run db:generate
+   npm run db:push
+   ```
 
-### Enable read access to all users
-
-```sql
-create policy "Allow read access" on public.books
-  for select
-  using (true);
-```
-
-### Enable insert access to all users
-
-```sql
-create policy "Allow insert access" on public.books
-  for insert
-  with check (true);
-```
+   - The `db:generate` script will generate migration files based on your schema defined in `drizzle/schema.js`.
+   - The `db:push` script will apply these migrations to your Supabase database.
 
 ## Environment Variables
 
 Make sure the following environment variables are set in your `.env` file:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- `DATABASE_URL`
+
+## External Manual Steps
+
+- **Enable SSL Connections:**
+  - Supabase requires SSL connections. In your `drizzle.config.js` and database connection configuration, ensure that SSL is enabled with `rejectUnauthorized: false`.
+
+- **Database Password:**
+  - If you haven't set a password for your Supabase database, you need to set it in the Supabase dashboard under **Settings > Database > Password**.
+
+- **Update Vercel Environment Variables:**
+  - In your Vercel dashboard, set the `DATABASE_URL` environment variable for your project to ensure the backend functions can connect to your Supabase database in production.

@@ -1,5 +1,4 @@
 import { createSignal } from 'solid-js';
-import { supabase } from '../supabaseClient';
 import { useNavigate } from '@solidjs/router';
 
 function AddBook() {
@@ -13,18 +12,26 @@ function AddBook() {
     e.preventDefault();
     if (loading()) return;
     setLoading(true);
-    const { error } = await supabase.from('books').insert([
-      {
-        title: title(),
-        author: author(),
-        score: score(),
-      },
-    ]);
-    setLoading(false);
-    if (error) {
-      console.error(error);
-    } else {
+    try {
+      const response = await fetch('/api/books', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: title(),
+          author: author(),
+          score: score(),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add book');
+      }
       navigate('/');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 

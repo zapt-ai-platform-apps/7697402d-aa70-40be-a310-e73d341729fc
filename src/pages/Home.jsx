@@ -1,5 +1,4 @@
 import { createSignal, onMount, Show, For } from 'solid-js';
-import { supabase } from '../supabaseClient';
 import Star from '../components/Star';
 
 function Home() {
@@ -7,16 +6,18 @@ function Home() {
   const [loading, setLoading] = createSignal(true);
 
   onMount(async () => {
-    const { data, error } = await supabase
-      .from('books')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) {
-      console.error(error);
-    } else {
+    try {
+      const response = await fetch('/api/books');
+      if (!response.ok) {
+        throw new Error('Failed to fetch books');
+      }
+      const data = await response.json();
       setBooks(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   });
 
   const renderStars = (score) => {
